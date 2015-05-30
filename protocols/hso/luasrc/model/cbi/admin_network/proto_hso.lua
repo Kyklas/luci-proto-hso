@@ -13,26 +13,32 @@ You may obtain a copy of the License at
 local map, section, net = ...
 
 local hsoname,hsotype,hsointerface
-local device, apn, service, pincode, username, password
+local ttyCtrl,ttyApp, apn, service, pincode, username, password,roaming,loclog
 local ipv6, maxwait, defaultroute, metric, peerdns, dns,
       keepalive_failure, keepalive_interval, demand
 
 
-device = section:taboption("general", Value, "device", translate("Control interface"))
-device.rmempty = false
+ttyCtrl = section:taboption("general", Value, "ttyCtrl", translate("Control interface"))
+ttyApp = section:taboption("general", Value, "ttyApp", translate("Application interface"))
+ttyCtrl.rmempty = false
+ttyApp.rmempty = false
 
-local device_suggestions = nixio.fs.glob("/dev/ttyHS*")
+local tty_suggestions = nixio.fs.glob("/dev/ttyHS*")
 	or nixio.fs.glob("/dev/tts/*")
 
-if device_suggestions then
+if tty_suggestions then
 	local node
-	for node in device_suggestions do
+	for node in tty_suggestions do
 		hsoname = string.gsub(node,"/dev/","")
 		hsotype = nixio.fs.readfile("/sys/class/tty/" .. hsoname .. "/hsotype")
-		device:value(node, hsotype .. " (" .. node ..")" )
+		ttyCtrl:value(node, hsotype .. " (" .. node ..")" )
+		ttyApp:value(node, hsotype .. " (" .. node ..")" )
 		if string.find(hsotype,"Application") ~= nil then
-			device.default = node
-        end
+			ttyApp.default = node
+		end
+		if string.find(hsotype,"Control") ~= nil then
+                        ttyCtrl.default = node
+		end
 	end
 end
 
@@ -55,6 +61,10 @@ username = section:taboption("general", Value, "username", translate("PAP/CHAP u
 
 password = section:taboption("general", Value, "password", translate("PAP/CHAP password"))
 password.password = true
+
+roaming = section:taboption("general", Flag, "roaming", translate("Roaming"))
+loclog = section:taboption("general", Value, "loclog", translate("Cell Log"),
+	 translate("File to log the cell tower information, can get quite large, unmonitored"))
 
 
 if luci.model.network:has_ipv6() then
