@@ -20,8 +20,15 @@ local ipv6, maxwait, defaultroute, metric, peerdns, dns,
 
 ttyCtrl = section:taboption("general", Value, "ttyCtrl", translate("Control interface"))
 ttyApp = section:taboption("general", Value, "ttyApp", translate("Application interface"))
+ttyGPS = section:taboption("general", Value, "ttyGPS", translate("GPS interface"))
+ttyGPSCtrl = section:taboption("general", Value, "ttyGPSCtrl", translate("GPS Control interface"))
 ttyCtrl.rmempty = false
 ttyApp.rmempty = false
+ttyGPS.rmempty = false
+ttyGPSCtrl.rmempty = false
+
+ttyGPS.default=""
+ttyGPSCtrl.default=""
 
 local tty_suggestions = nixio.fs.glob("/dev/ttyHS*")
 	or nixio.fs.glob("/dev/tts/*")
@@ -38,6 +45,12 @@ if tty_suggestions then
 		end
 		if string.find(hsotype,"Control") ~= nil then
                         ttyCtrl.default = node
+		end
+		if string.find(hsotype,"GPS") ~= nil then
+			ttyGPS.default = node
+		end
+		if string.find(hsotype,"GPS Control") ~= nil then
+			ttyGPSCtrl.default = node
 		end
 	end
 end
