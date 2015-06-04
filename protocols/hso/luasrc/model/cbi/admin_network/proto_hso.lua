@@ -40,6 +40,8 @@ if tty_suggestions then
 		hsotype = nixio.fs.readfile("/sys/class/tty/" .. hsoname .. "/hsotype")
 		ttyCtrl:value(node, hsotype .. " (" .. node ..")" )
 		ttyApp:value(node, hsotype .. " (" .. node ..")" )
+		ttyGPS:value(node, hsotype .. " (" .. node ..")" )
+		ttyGPSCtrl:value(node, hsotype .. " (" .. node ..")" )
 		if string.find(hsotype,"Application") ~= nil then
 			ttyApp.default = node
 		end
