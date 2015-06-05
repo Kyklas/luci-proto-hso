@@ -42,18 +42,18 @@ if tty_suggestions then
 		ttyApp:value(node, hsotype .. " (" .. node ..")" )
 		ttyGPS:value(node, hsotype .. " (" .. node ..")" )
 		ttyGPSCtrl:value(node, hsotype .. " (" .. node ..")" )
-		if string.find(hsotype,"Application") ~= nil then
-			ttyApp.default = node
-		end
-		if string.find(hsotype,"Control") ~= nil then
+                if string.find(hsotype,"Application") ~= nil and string.len(hsotype) == 12 then
+                        ttyApp.default = node
+                end
+                if string.find(hsotype,"Control") ~= nil and string.len(hsotype) == 8 then
                         ttyCtrl.default = node
-		end
-		if string.find(hsotype,"GPS") ~= nil then
-			ttyGPS.default = node
-		end
-		if string.find(hsotype,"GPS Control") ~= nil then
-			ttyGPSCtrl.default = node
-		end
+                end
+                if string.find(hsotype,"GPS Control") ~= nil and string.len(hsotype) == 12 then
+                        ttyGPSCtrl.default = node
+                end
+                if string.find(hsotype,"GPS") ~= nil and string.len(hsotype) == 4 then
+                        ttyGPS.default = node
+                end
 	end
 end
 
